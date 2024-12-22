@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 wordData = result.word_data;
 
+                // Clear the transcript div before adding new content
+                transcriptDiv.innerHTML = '';
+
                 wordData.forEach(word => {
                     const wordSpan = document.createElement('span');
                     wordSpan.textContent = word.word + ' ';
@@ -52,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function highlightWords() {
         const currentTime = audioPlayer.currentTime;
         const words = transcriptDiv.querySelectorAll('span');
-
+    
         words.forEach(word => {
             const startTime = parseFloat(word.dataset.startTime);
             const endTime = parseFloat(word.dataset.endTime);
-
+    
             if (currentTime >= startTime && currentTime <= endTime) {
                 word.classList.add('highlight');
             } else {
@@ -64,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
 
     checkModelStatus(() => {
         fetchTranscript();
