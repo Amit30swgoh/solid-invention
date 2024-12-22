@@ -1,43 +1,48 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* More modern font */
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f8f8f8; /* Slightly off-white background */
     color: #333;
 }
 
 .container {
     width: 80%;
+    max-width: 800px; /* Limit container width for better readability */
     margin: 0 auto;
     padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 h1 {
-    color: #333;
-}
-
-input[type="file"] {
-    margin: 20px 0;
+    color: #22457a; /* Darker blue for the heading */
+    text-align: center;
+    margin-bottom: 30px; /* Add more space below the heading */
 }
 
 audio {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px; /* Add more space below the audio player */
 }
 
 #transcript {
-    padding: 10px;
+    padding: 20px;
     border: 1px solid #ddd;
     background-color: #fff;
     font-size: 18px;
     line-height: 1.6;
-    white-space: pre-wrap; /* Preserve newlines and spaces */
+    white-space: pre-wrap;
+    font-family: 'Courier New', Courier, monospace; /* Monospaced font for transcript */
+    border-radius: 5px;
 }
 
 #transcript span {
-    cursor: pointer; /* Make words clickable */
+    cursor: pointer;
 }
 
 #transcript span.highlight {
-    background-color: yellow;
+    background-color: #fffacd; /* Lighter yellow highlight */
+    font-weight: bold; /* Make highlighted words bolder */
 }
