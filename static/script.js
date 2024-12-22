@@ -5,19 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioPlayer.src = '/static/audio.opus';
 
-    function checkModelStatus(callback) {
-        fetch('/status')
-            .then(response => response.json())
-            .then(data => {
-                if (data.model_loaded) {
-                    callback();
-                } else {
-                    setTimeout(() => checkModelStatus(callback), 1000); // Check again after 1 second
-                }
-            })
-            .catch(error => console.error('Error checking model status:', error));
-    }
-
     function fetchTranscript() {
         fetch('/process', { method: 'POST' })
             .then(response => {
@@ -36,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Clear the transcript div before adding new content
                 transcriptDiv.innerHTML = '';
 
+                // Add each word as a separate span
                 wordData.forEach(word => {
                     const wordSpan = document.createElement('span');
                     wordSpan.textContent = word.word + ' ';
@@ -44,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     transcriptDiv.appendChild(wordSpan);
                 });
 
+                // Add event listener for highlighting
                 audioPlayer.addEventListener('timeupdate', highlightWords);
             })
             .catch(error => {
@@ -67,9 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
 
-    checkModelStatus(() => {
-        fetchTranscript();
-    });
+    // Call fetchTranscript to load the transcript data
+    fetchTranscript();
 });
