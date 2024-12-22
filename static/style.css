@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+input[type="file"] {
+    margin: 20px 0;
+}
+
+audio {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#transcript {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 18px;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserve newlines and spaces */
+}
+
+#transcript span {
+    cursor: pointer; /* Make words clickable */
+}
+
+#transcript span.highlight {
+    background-color: yellow;
+}
