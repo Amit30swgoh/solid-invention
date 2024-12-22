@@ -1,60 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const audioFileInput = document.getElementById('audioFile');
     const audioPlayer = document.getElementById('audioPlayer');
     const transcriptDiv = document.getElementById('transcript');
-    let audioURL = null; // Store the audio URL globally
     let wordData = []; // Store the word data globally
 
-    audioFileInput.addEventListener('change', async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            // Clear previous transcript and reset audio player
-            transcriptDiv.innerHTML = '';
-            audioPlayer.src = '';
+    // Set the audio source to the static file
+    audioPlayer.src = '/static/audio.opus';
 
-            try {
-                const formData = new FormData();
-                formData.append('audioFile', file);
+    async function fetchTranscript() {
+        try {
+            const response = await fetch('/process', { method: 'POST' }); // Make a POST request to /process
 
-                const response = await fetch('/process', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.error) {
-                    throw new Error(result.error);
-                }
-
-                wordData = result.word_data;
-                audioURL = result.audio_url;
-
-                // Update audio player source
-                audioPlayer.src = audioURL;
-
-                // Populate the transcript
-                wordData.forEach(word => {
-                    const wordSpan = document.createElement('span');
-                    wordSpan.textContent = word.word + ' ';
-                    wordSpan.dataset.startTime = word.start;
-                    wordSpan.dataset.endTime = word.end;
-                    transcriptDiv.appendChild(wordSpan);
-                });
-
-                // Add event listener for highlighting
-                audioPlayer.addEventListener('timeupdate', highlightWords);
-
-            } catch (error) {
-                console.error('Error processing audio:', error);
-                transcriptDiv.textContent = 'Error processing audio: ' + error.message;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const result = await response.json();
+
+            if (result.error) {
+                throw new Error(result.error);
+            }
+
+            wordData = result.word_data; // Update the global wordData
+
+            // Populate the transcript
+            wordData.forEach(word => {
+                const wordSpan = document.createElement('span');
+                wordSpan.textContent = word.word + ' ';
+                wordSpan.dataset.startTime = word.start;
+                wordSpan.dataset.endTime = word.end;
+                transcriptDiv.appendChild(wordSpan);
+            });
+
+            // Add event listener for highlighting
+            audioPlayer.addEventListener('timeupdate', highlightWords);
+
+        } catch (error) {
+            console.error('Error fetching transcript:', error);
+            transcriptDiv.textContent = 'Error fetching transcript: ' + error.message;
         }
-    });
+    }
 
     function highlightWords() {
         const currentTime = audioPlayer.currentTime;
@@ -71,4 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Call fetchTranscript to load the transcript data
+    fetchTranscript();
 });
