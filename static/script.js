@@ -1,43 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
     const audioPlayer = document.getElementById('audioPlayer');
     const transcriptDiv = document.getElementById('transcript');
-    let wordData = []; // Store the word data globally
+    let wordData = [];
 
-    // Set the audio source to the static file
     audioPlayer.src = '/static/audio.opus';
 
-    async function fetchTranscript() {
-        try {
-            const response = await fetch('/process', { method: 'POST' }); // Make a POST request to /process
+    function checkModelStatus(callback) {
+        fetch('/status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.model_loaded) {
+                    callback();
+                } else {
+                    setTimeout(() => checkModelStatus(callback), 1000); // Check again after 1 second
+                }
+            })
+            .catch(error => console.error('Error checking model status:', error));
+    }
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+    function fetchTranscript() {
+        fetch('/process', { method: 'POST' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.error) {
+                    throw new Error(result.error);
+                }
 
-            const result = await response.json();
+                wordData = result.word_data;
 
-            if (result.error) {
-                throw new Error(result.error);
-            }
+                wordData.forEach(word => {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.textContent = word.word + ' ';
+                    wordSpan.dataset.startTime = word.start;
+                    wordSpan.dataset.endTime = word.end;
+                    transcriptDiv.appendChild(wordSpan);
+                });
 
-            wordData = result.word_data; // Update the global wordData
-
-            // Populate the transcript
-            wordData.forEach(word => {
-                const wordSpan = document.createElement('span');
-                wordSpan.textContent = word.word + ' ';
-                wordSpan.dataset.startTime = word.start;
-                wordSpan.dataset.endTime = word.end;
-                transcriptDiv.appendChild(wordSpan);
+                audioPlayer.addEventListener('timeupdate', highlightWords);
+            })
+            .catch(error => {
+                console.error('Error fetching transcript:', error);
+                transcriptDiv.textContent = 'Error fetching transcript: ' + error.message;
             });
-
-            // Add event listener for highlighting
-            audioPlayer.addEventListener('timeupdate', highlightWords);
-
-        } catch (error) {
-            console.error('Error fetching transcript:', error);
-            transcriptDiv.textContent = 'Error fetching transcript: ' + error.message;
-        }
     }
 
     function highlightWords() {
@@ -56,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Call fetchTranscript to load the transcript data
-    fetchTranscript();
+    checkModelStatus(() => {
+        fetchTranscript();
+    });
 });
