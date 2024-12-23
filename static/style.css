@@ -33,11 +33,10 @@ audio {
 
 #transcript {
     padding: 20px;
-    background-color: #333;
+    background-color: #333; /* Initially dark for contrast */
     color: #fff;
     font-size: 1em;
     line-height: 1.6;
-    white-space: pre-wrap;
     font-family: 'Arial', sans-serif;
     border-radius: 10px;
     overflow-y: auto;
@@ -51,7 +50,7 @@ audio {
 }
 
 #transcript span.highlight {
-    background-color: #fffacd;
+    background-color: #fffacd; /* Highlight color */
     font-weight: bold;
     color: #22457a;
 }
@@ -73,37 +72,61 @@ audio {
     opacity: 0;
 }
 
-/* Additional styles for better visual presentation */
-.title {
-    color: #fff;
-    font-size: 1.8em;
-    margin-top: 20px;
+/* Transcript Styling */
+.transcript-content {
+    color: #fff; /* Light text for visibility on dark background */
+    line-height: 1.5;
 }
 
-.authors, .affiliations, .abstract-summary {
+.transcript-content h2 {
+    color: #fff;
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+.transcript-content h3 {
+    color: #fff;
+    font-size: 1.3em;
+    margin-top: 0.8em;
+    margin-bottom: 0.4em;
+}
+
+.transcript-content p {
+    color: #fff;
+    margin-bottom: 0.5em;
+}
+
+.transcript-content p.authors,
+.transcript-content p.affiliations {
     color: #ddd;
     font-size: 1em;
-    line-height: 1.5;
-    margin-bottom: 10px;
+    margin-bottom: 0.5em;
 }
 
-.authors b, .affiliations b, .abstract-summary b {
+.transcript-content ul {
+    color: #fff;
+    padding-left: 20px;
+    margin-bottom: 0.5em;
+}
+
+.transcript-content li {
+    color: #fff;
+    margin-bottom: 0.5em;
+}
+
+.transcript-content hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 1em 0;
+}
+
+.transcript-content b {
     color: #fff;
     font-weight: bold;
 }
 
-.abstract-summary li {
-    margin-bottom: 15px;
-}
-
-.abstract-summary i {
+.transcript-content i {
+    color: #fff;
     font-style: italic;
-}
-
-.abstract-summary b {
-    font-weight: bold;
-}
-
-.abstract-summary {
-    margin-bottom: 20px;
 }
