@@ -19,22 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 wordData = result.word_data;
-                transcriptDiv.innerHTML = ""; //Clear the transcript div
+                transcriptDiv.innerHTML = result.transcript_html;
 
-                // Wrap each word in a span with timing data
-                wordData.forEach(word => {
-                    const span = document.createElement('span');
-                    span.textContent = word.word + ' ';
-                    span.setAttribute('data-start-time', word.start);
-                    span.setAttribute('data-end-time', word.end);
-                    transcriptDiv.appendChild(span);
-                });
-
-                // Add event listener for highlighting
-                transcriptDiv.querySelectorAll('span').forEach(span => {
+                // Add event listeners to spans that have timing data
+                transcriptDiv.querySelectorAll('span[data-start-time]').forEach(span => {
                     span.addEventListener('click', () => {
-                        audioPlayer.currentTime = parseFloat(span.dataset.startTime);
-                        audioPlayer.play();
+                        const startTime = parseFloat(span.dataset.startTime);
+                        if (!isNaN(startTime)) {
+                            audioPlayer.currentTime = startTime;
+                            audioPlayer.play();
+                        }
                     });
                 });
 
@@ -48,13 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function highlightWords() {
         const currentTime = audioPlayer.currentTime;
-        const spans = transcriptDiv.querySelectorAll('span');
-
-        spans.forEach(span => {
+        
+        transcriptDiv.querySelectorAll('span[data-start-time]').forEach(span => {
             const startTime = parseFloat(span.dataset.startTime);
             const endTime = parseFloat(span.dataset.endTime);
 
-            if (currentTime >= startTime && currentTime <= endTime) {
+            if (!isNaN(startTime) && !isNaN(endTime) && currentTime >= startTime && currentTime <= endTime) {
                 span.classList.add('highlight');
             } else {
                 span.classList.remove('highlight');
@@ -89,18 +82,4 @@ function createDot(container) {
     dot.style.left = `${x}px`;
     dot.style.top = `${y}px`;
     dot.style.width = `${size}px`;
-    dot.style.height = `${size}px`;
-
-    // Animate the dot
-    anime({
-        targets: dot,
-        translateX: () => anime.random(-window.innerWidth / 2, window.innerWidth / 2),
-        translateY: () => anime.random(-window.innerHeight / 2, window.innerHeight / 2),
-        scale: () => anime.random(1, 2),
-        opacity: [0, 0.5, 0],
-        easing: 'easeInOutQuad',
-        duration: anime.random(3000, 6000),
-        loop: true,
-        direction: 'alternate'
-    });
-}
+    dot
