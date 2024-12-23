@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function highlightWords() {
         const currentTime = audioPlayer.currentTime;
-        
+
         transcriptDiv.querySelectorAll('span[data-start-time]').forEach(span => {
             const startTime = parseFloat(span.dataset.startTime);
             const endTime = parseFloat(span.dataset.endTime);
@@ -82,4 +82,18 @@ function createDot(container) {
     dot.style.left = `${x}px`;
     dot.style.top = `${y}px`;
     dot.style.width = `${size}px`;
-    dot
+    dot.style.height = `${size}px`;
+
+    // Animate the dot
+    anime({
+        targets: dot,
+        translateX: () => anime.random(-window.innerWidth / 2, window.innerWidth / 2),
+        translateY: () => anime.random(-window.innerHeight / 2, window.innerHeight / 2),
+        scale: () => anime.random(1, 2),
+        opacity: [0, 0.5, 0],
+        easing: 'easeInOutQuad',
+        duration: anime.random(3000, 6000),
+        loop: true,
+        direction: 'alternate'
+    });
+}
