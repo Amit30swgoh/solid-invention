@@ -19,14 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 wordData = result.word_data;
-                
+                transcriptDiv.innerHTML = ""; //Clear the transcript div
+
                 // Wrap each word in a span with timing data
-                let formattedTranscript = '';
                 wordData.forEach(word => {
-                    const wordText = word.word;
-                    formattedTranscript += `<span data-start-time="${word.start}" data-end-time="${word.end}">${wordText}</span> `;
+                    const span = document.createElement('span');
+                    span.textContent = word.word + ' ';
+                    span.setAttribute('data-start-time', word.start);
+                    span.setAttribute('data-end-time', word.end);
+                    transcriptDiv.appendChild(span);
                 });
-                transcriptDiv.innerHTML = formattedTranscript;
 
                 // Add event listener for highlighting
                 transcriptDiv.querySelectorAll('span').forEach(span => {
