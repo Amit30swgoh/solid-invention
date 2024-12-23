@@ -19,22 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 wordData = result.word_data;
-                transcriptDiv.innerHTML = result.transcript_html; // Set the HTML content
-
+                
                 // Wrap each word in a span with timing data
                 let formattedTranscript = '';
-                let charIndex = 0;
                 wordData.forEach(word => {
                     const wordText = word.word;
-                    const startIndex = result.transcript_html.indexOf(wordText, charIndex);
-                    if (startIndex !== -1) {
-                        const preText = result.transcript_html.substring(charIndex, startIndex);
-                        formattedTranscript += preText;
-                        formattedTranscript += `<span data-start-time="${word.start}" data-end-time="${word.end}">${wordText}</span>`;
-                        charIndex = startIndex + wordText.length;
-                    }
+                    formattedTranscript += `<span data-start-time="${word.start}" data-end-time="${word.end}">${wordText}</span> `;
                 });
-                formattedTranscript += result.transcript_html.substring(charIndex);
                 transcriptDiv.innerHTML = formattedTranscript;
 
                 // Add event listener for highlighting
